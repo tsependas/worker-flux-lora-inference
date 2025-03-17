@@ -20,7 +20,7 @@ venv\Scripts\activate
 pip install runpod
 
 # 4. Run your script locally, the script will automatically read test_input.json as input, passing it to the handler function as an event
-python rp_handler.py
+python3 rp_handler.py
 
 ```
 
