@@ -1,6 +1,8 @@
 import runpod
 import time  
 
+time.sleep(1000)  
+
 def handler(event):
     print(f"Worker Start")
     input = event['input']
