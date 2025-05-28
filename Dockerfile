@@ -27,9 +27,8 @@ COPY download_flux.py ./
 # Accept Hugging Face token as build argument
 ARG HF_TOKEN
 
-# Login to Hugging Face using provided token
-# and immediately delete token after usage
-RUN echo "$HF_TOKEN" | huggingface-cli login --token && \
+# Use token in login
+RUN huggingface-cli login --token ${HF_TOKEN} && \
     rm -f ~/.huggingface/token
 
 # ✅ Download model
