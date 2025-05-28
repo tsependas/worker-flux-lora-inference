@@ -1,31 +1,43 @@
 # Stage 1: Builder
-FROM python:3.12-slim AS builder
+FROM nvidia/cuda:12.6.2-cudnn-runtime-ubuntu22.04 AS builder
 
+ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /app
 
+# Install build dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git gcc libgl1 libglib2.0-0 && rm -rf /var/lib/apt/lists/*
+    python3 python3-pip python3-venv python3-dev \
+    git build-essential libgl1 libglib2.0-0 libsm6 libxext6 libxrender1 \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt ./
-RUN python3 -m venv /venv && \
-    . /venv/bin/activate && \
-    pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Create and activate virtualenv
+RUN python3 -m venv /venv
+ENV PATH="/venv/bin:$PATH"
 
-RUN git clone https://github.com/ostris/ai-toolkit.git /app/ai-toolkit && \
-    pip install --no-cache-dir -r /app/ai-toolkit/requirements.txt && \
-    pip install --no-cache-dir torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu126
+# Upgrade pip and install torch first (GPU-compatible version)
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu126
 
-COPY rp_handler.py /app/
+# Copy and install all other dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Stage 2: Minimal runtime
-FROM python:3.12-slim
+# Clone or copy app code
+COPY . /app
+
+# Stage 2: Runtime (also based on CUDA runtime)
+FROM nvidia/cuda:12.6.2-cudnn-runtime-ubuntu22.04
 
 WORKDIR /app
 
-COPY --from=builder /app /app
-COPY --from=builder /venv /venv
+# Install Python (minimal)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-venv python3-pip libgl1 libglib2.0-0 libsm6 libxext6 libxrender1 \
+    && rm -rf /var/lib/apt/lists/*
 
+# Copy virtual environment and app
+COPY --from=builder /venv /venv
+COPY --from=builder /app /app
 ENV PATH="/venv/bin:$PATH"
 
 CMD ["python3", "-u", "rp_handler.py"]
