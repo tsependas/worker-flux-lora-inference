@@ -10,7 +10,7 @@ def initialize_models():
     pipe = FluxPipeline.from_pretrained(
         model_path,
         torch_dtype=torch.float16,
-        device_map="auto"
+        device_map="balanced"
     )
     return pipe
 
