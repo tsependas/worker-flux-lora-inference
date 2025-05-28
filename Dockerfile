@@ -35,7 +35,9 @@ WORKDIR /app
 
 # Install Python (minimal)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 python3-venv python3-pip libgl1 libglib2.0-0 libsm6 libxext6 libxrender1 \
+    python3 python3-venv python3-pip \
+    libgl1 libglib2.0-0 libsm6 libxext6 libxrender1 \
+    build-essential gcc \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy virtual environment and app
