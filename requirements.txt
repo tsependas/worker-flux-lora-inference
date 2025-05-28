@@ -7,3 +7,13 @@ huggingface_hub
 peft                  # If using LoRA
 accelerate            # Often needed by diffusers
 einops                # Required by some pipelines
+
+# Optional dependencies
+peft                 # If using LoRA
+lycoris-lora==1.8.3  # If using LyCORIS weights
+bitsandbytes         # For 8-bit inference or quantized LoRA
+python-dotenv        # If using .env config for HF_TOKEN
+gradio               # If serving an inference UI
+sentencepiece        # Some tokenizers need this (e.g., T5, mT5)
+opencv-python        # For image pre/post-processing
+protobuf             # Required implicitly by transformers (add this!)
