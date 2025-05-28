@@ -1,2 +1,9 @@
 runpod==1.7.9
 boto3==1.38.22
+safetensors
+transformers==4.49.0
+diffusers @ git+https://github.com/huggingface/diffusers@363d1ab7e24c5ed6c190abb00df66d9edb74383b
+huggingface_hub
+peft                  # If using LoRA
+accelerate            # Often needed by diffusers
+einops                # Required by some pipelines

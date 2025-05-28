@@ -23,8 +23,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 🧠 Install ai-toolkit
-RUN git clone https://github.com/ostris/ai-toolkit.git /app/ai-toolkit && \
-    pip install --no-cache-dir -r /app/ai-toolkit/requirements.txt
+RUN git clone https://github.com/ostris/ai-toolkit.git /app/ai-toolkit
 
 # Clone or copy app code
 COPY . /app
