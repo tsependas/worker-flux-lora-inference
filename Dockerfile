@@ -22,6 +22,9 @@ RUN pip install --no-cache-dir torch==2.6.0 torchvision==0.21.0 --index-url http
 # Install ai-toolkit requirements
 RUN pip install --no-cache-dir -r /app/ai-toolkit/requirements.txt
 
+# download flux1-dev model at build
+RUN python3 -c "from ai_toolkit.models import download_model; download_model('black-forest-labs/FLUX.1-dev', save_dir='/app/flux1-dev')"
+
 
 COPY rp_handler.py ./
 
