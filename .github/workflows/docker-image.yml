@@ -1,0 +1,32 @@
+name: Build and Publish
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push with BuildKit secret
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-app:latest
+          # this will mount $HF_TOKEN into /run/secrets/HF_TOKEN
+          secrets: |
+            id=HF_TOKEN,env=HF_TOKEN
+          # you can still pass other build-args here if needed:
+          build-args: |
+            SOME_OTHER_ARG=foo
