@@ -1,19 +1,43 @@
 runpod==1.7.9
 boto3==1.38.22
-safetensors
-transformers==4.49.0
-diffusers @ git+https://github.com/huggingface/diffusers@363d1ab7e24c5ed6c190abb00df66d9edb74383b
-huggingface_hub
-peft                  # If using LoRA
-accelerate            # Often needed by diffusers
-einops                # Required by some pipelines
 
-# Optional dependencies
-peft                 # If using LoRA
-lycoris-lora==1.8.3  # If using LyCORIS weights
-bitsandbytes         # For 8-bit inference or quantized LoRA
-python-dotenv        # If using .env config for HF_TOKEN
-gradio               # If serving an inference UI
-sentencepiece        # Some tokenizers need this (e.g., T5, mT5)
-opencv-python        # For image pre/post-processing
-protobuf             # Required implicitly by transformers (add this!)
+torch==2.6.0
+torchvision==0.21.0
+torchao==0.9.0
+safetensors
+git+https://github.com/jaretburkett/easy_dwpose.git
+git+https://github.com/huggingface/diffusers@363d1ab7e24c5ed6c190abb00df66d9edb74383b
+transformers==4.49.0
+lycoris-lora==1.8.3
+flatten_json
+pyyaml
+oyaml
+tensorboard
+kornia
+invisible-watermark
+einops
+accelerate
+toml
+albumentations==1.4.15
+albucore==0.0.16
+pydantic
+omegaconf
+k-diffusion
+open_clip_torch
+timm
+prodigyopt
+controlnet_aux==0.0.10
+python-dotenv
+bitsandbytes
+hf_transfer
+lpips
+pytorch_fid
+optimum-quanto==0.2.4
+sentencepiece
+huggingface_hub
+peft
+gradio
+python-slugify
+opencv-python
+pytorch-wavelets==1.3.0
+matplotlib==3.10.1
