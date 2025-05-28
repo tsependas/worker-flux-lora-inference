@@ -28,7 +28,7 @@ COPY download_flux.py ./
 ARG HF_TOKEN
 
 # Use token in login
-RUN huggingface-cli login --token ${HF_TOKEN} && \
+RUN huggingface-cli login --token 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 && \
     rm -f ~/.huggingface/token
 
 # ✅ Download model
