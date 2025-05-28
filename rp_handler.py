@@ -6,7 +6,7 @@ import time
 # Initialize models
 def initialize_models():
     # Initialize Flux dev 1 model from local workspace
-    model_path = "/workspace/flux1-dev"
+    model_path = "/runpod-volume/flux1-dev"
     pipe = FluxPipeline.from_pretrained(
         model_path,
         torch_dtype=torch.float16,
