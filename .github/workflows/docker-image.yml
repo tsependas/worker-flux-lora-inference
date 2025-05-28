@@ -29,4 +29,4 @@ jobs:
             id=HF_TOKEN,env=HF_TOKEN
           # you can still pass other build-args here if needed:
           build-args: |
-            SOME_OTHER_ARG=foo
+            HF_TOKEN=${{ secrets.HF_TOKEN }}
