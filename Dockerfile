@@ -24,7 +24,9 @@ RUN pip install --no-cache-dir -r /app/ai-toolkit/requirements.txt
 
 COPY download_flux.py ./
 
-RUN huggingface-cli login --token ${HF_TOKEN}
+ENV HF_TOKEN=${HF_TOKEN}
+RUN huggingface-cli login --token $HF_TOKEN
+
 # ✅ Download model
 RUN python download_flux.py
 
