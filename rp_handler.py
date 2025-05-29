@@ -15,7 +15,7 @@ def initialize_models():
     pipe = FluxPipeline.from_pretrained(
         model_path,
         torch_dtype=torch.float16,
-        device_map="balanced"
+        use_safetensors=True
     )
 
     # 🧠 Enable memory-efficient attention if xformers is installed
