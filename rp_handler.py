@@ -1,3 +1,7 @@
+import os
+# 🧠 Prevent CUDA memory fragmentation
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+
 import runpod
 import torch
 from diffusers import FluxPipeline
@@ -5,36 +9,50 @@ import time
 
 # Initialize models
 def initialize_models():
-    # Initialize Flux dev 1 model from local workspace
     model_path = "/runpod-volume/flux1-dev"
+
+    # Load FLUX pipeline
     pipe = FluxPipeline.from_pretrained(
         model_path,
         torch_dtype=torch.float16,
         device_map="balanced"
     )
+
+    # 🧠 Enable memory-efficient attention if xformers is installed
+    try:
+        pipe.enable_xformers_memory_efficient_attention()
+        print("✅ Enabled xformers memory-efficient attention.")
+    except Exception as e:
+        print(f"⚠️ Could not enable xformers attention: {e}")
+
     return pipe
 
-# Initialize model at startup
+# Load model at startup
 pipe = initialize_models()
 
-def generate_image(prompt, negative_prompt="", num_inference_steps=50):
+# Image generation logic
+def generate_image(prompt, negative_prompt="", num_inference_steps=28):
+    torch.cuda.empty_cache()  # Clear unused memory
+
     image = pipe(
         prompt=prompt,
         negative_prompt=negative_prompt,
         num_inference_steps=num_inference_steps
     ).images[0]
+
     return image
 
+# RunPod serverless handler
 def handler(event):
-    print(f"Worker Start")
+    print("🚀 Worker start")
     input = event['input']
-    
+
     prompt = input.get('prompt')
     negative_prompt = input.get('negative_prompt', '')
     num_inference_steps = input.get('num_inference_steps', 28)
-    
-    print(f"Received prompt: {prompt}")
-    
+
+    print(f"📥 Prompt: {prompt}")
+
     try:
         result = generate_image(prompt, negative_prompt, num_inference_steps)
         return {
@@ -47,5 +65,6 @@ def handler(event):
             "error": str(e)
         }
 
+# Run as serverless function
 if __name__ == '__main__':
     runpod.serverless.start({'handler': handler})
